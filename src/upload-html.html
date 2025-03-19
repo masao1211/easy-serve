@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+</head>
+<body>
+    <h1>File Upload</h1>
+    
+    <form id="uploadForm">
+        <div>
+            <label for="file">Select file to upload:</label><br>
+            <input type="file" id="file" name="file" required>
+        </div>
+        <button type="button" onclick="uploadFile()">Upload</button>
+    </form>
+    
+    <div id="message" style="display: none;"></div>
+    
+    <p><a href="/">Back to file list</a></p>
+    
+    <script>
+        function uploadFile() {
+            const fileInput = document.getElementById('file');
+            if (!fileInput.files.length) {
+                showMessage('Please select a file');
+                return;
+            }
+            
+            const file = fileInput.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                const xhr = new XMLHttpRequest();
+                
+                xhr.open('PUT', '/' + file.name, true);
+                
+                xhr.onload = function() {
+                    if (xhr.status === 201 || xhr.status === 204) {
+                        showMessage('File uploaded successfully');
+                        fileInput.value = '';
+                    } else {
+                        showMessage('Upload error: ' + xhr.status);
+                    }
+                };
+                
+                xhr.onerror = function() {
+                    showMessage('Network error occurred');
+                };
+                
+                xhr.send(e.target.result);
+            };
+            
+            reader.readAsArrayBuffer(file);
+        }
+        
+        function showMessage(text) {
+            const message = document.getElementById('message');
+            message.textContent = text;
+            message.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,17 +1,17 @@
-# ベースイメージとしてNginxを使用
+# Use Nginx as base image
 FROM nginx:alpine
 
-# デフォルトのNginx設定を削除
+# Remove default Nginx config
 RUN rm /etc/nginx/conf.d/default.conf
 
-# カスタムNginx設定を追加
+# Add custom Nginx config
 COPY nginx.conf /etc/nginx/conf.d/
 
-# ファイルを表示するディレクトリを作成
+# Create directory for serving files
 RUN mkdir -p /usr/share/nginx/html
 
-# 80番ポートを公開
+# Expose port 80
 EXPOSE 80
 
-# Nginxを起動
+# Nginx will run in the foreground
 CMD ["nginx", "-g", "daemon off;"]

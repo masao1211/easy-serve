@@ -38,11 +38,7 @@ docker logs file-server-container
 
 To stop and remove the container:
 ```bash
-# Stop the container
-docker stop file-server-container
-
-# Remove the container
-docker rm file-server-container
+docker rm -f file-server-container
 ```
 
 To remove the Docker image:
